@@ -1,7 +1,7 @@
 {
-  "name": "chrome-extension-boilerplate-react-vite",
-  "version": "0.0.1",
-  "description": "chrome extension boilerplate",
+  "name": "vk-friends",
+  "version": "0.0.3",
+  "description": "Получи 10000 друзей ВКонтакте! На полном автомате. Используйте паузы между отправками приглашений. Это защита от блокировки анкеты.",
   "license": "MIT",
   "repository": {
     "type": "git",

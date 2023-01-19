@@ -15,14 +15,15 @@
 
 ## Table of Contents
 
-- [Intro](#intro)
-- [Features](#features)
-- [Installation](#installation)
-  - [Procedures](#procedures)
-- [Screenshots](#screenshots)
-  - [NewTab](#newtab)
-  - [Popup](#popup)  
-- [Documents](#documents)
+- [Table of Contents](#table-of-contents)
+- [Intro ](#intro-)
+- [Features ](#features-)
+- [Installation ](#installation-)
+  - [Procedures ](#procedures-)
+- [Screenshots ](#screenshots-)
+  - [New Tab ](#new-tab-)
+  - [Popup ](#popup-)
+- [Documents ](#documents-)
 
 
 ## Intro <a name="intro"></a>
@@ -73,17 +74,3 @@ This boilerplate is made for creating chrome extensions using React and Typescri
 - [ChromeExtension](https://developer.chrome.com/docs/extensions/mv3/)
 - [Rollup](https://rollupjs.org/guide/en/)
 - [Rollup-plugin-chrome-extension](https://www.extend-chrome.dev/rollup-plugin)
-
-
-
----
-## Thanks To
-
-| [Jetbrains](https://jb.gg/OpenSourceSupport)                                                                           | [Jackson Hong](https://www.linkedin.com/in/j-acks0n/)                                            |
-|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
-| <img width="100" src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" alt="JetBrains Logo (Main) logo."> | <img width="100" src='https://avatars.githubusercontent.com/u/23139754?v=4' alt='Jackson Hong'/> |
-
-
----
-
-[Jonghakseo](https://nookpi.tistory.com/)

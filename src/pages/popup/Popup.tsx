@@ -1,23 +1,22 @@
-import React from "react";
-import logo from "@assets/img/logo.svg";
-import "@pages/popup/Popup.css";
+import logo from "@assets/img/image-menu.png";
+import "@src/assets/style/Popup.css";
 
 const Popup = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div>
+      <header>
         <p>
-          Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.
+          <span>Перейдите в раздел рекомендуемых друзей </span>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://vk.com/friends?act=find"
+          >
+            https://vk.com/friends?act=find
+          </a>
+          <span> и найдите иконку добавления друзей вот тут</span>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React!
-        </a>
+        <img src={logo} alt="Перейдите в раздел рекомендуемых друзей" />
       </header>
     </div>
   );
