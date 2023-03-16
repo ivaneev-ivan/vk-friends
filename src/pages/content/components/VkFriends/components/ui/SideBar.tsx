@@ -70,52 +70,63 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
     }
   }, [isStarted]);
 
-  const clickUsers = () => {
+  const clickUsers = async () => {
     const is_started_local = Boolean(Number(localStorage.getItem("isStarted")));
     if (!is_started_local) {
       localStorage.setItem("done_users", "0");
-      removeAllTimeouts();
-      return;
+      return "stoped";
     }
     const error_message = document.querySelector(
       ".popup_box_container > div > div.box_body"
     );
     if (error_message !== undefined && error_message !== null) {
-      const i_want_set = Number(localStorage.getItem("i_want_set"));
-      const newtimeouts = [];
-      for (let i = i_want_set; i < Number(data.countClick); i++) {
-        newtimeouts.push(
-          setTimeout(
-            clickUsers,
-            getRndInteger(
-              Number(data.startDayLimit) * 1000 * i,
-              Number(data.stopDayLimit) * 1000 * i
-            )
-          )
-        );
-      }
-      removeAllTimeouts();
-      localStorage.setItem("timeouts", JSON.stringify(newtimeouts));
       document.querySelector("div.box_x_button").dispatchEvent(clickEvent);
-      return;
+      return "time_limit";
     } else {
       localStorage.setItem("done_users", String(done + 1));
-      const users = document.querySelectorAll(
-        "div.friends_find_user.clear_fix:not(.touched)"
-      );
-      if (!checkVisible(users[0], 160, "visible")) {
-        users[0].scrollIntoView();
+      if (window.location.href === "https://vk.com/friends?act=find") {
+        const users = document.querySelectorAll(
+          "div.friends_find_user.clear_fix:not(.touched)"
+        );
+        if (!checkVisible(users[0], 160, "visible")) {
+          users[0].scrollIntoView();
+        }
+        users[0]
+          .querySelector("a.friends_find_user_add")
+          .dispatchEvent(clickEvent);
+        helperRef.current += 1;
+        setDone(helperRef.current);
+      } else {
+        const users = document.querySelectorAll(
+          'button.search_sub_button[style=""]'
+        );
+        if (users.length === 0) {
+          try {
+            document.getElementById("ui_search_load_more"), "this is element";
+            document
+              .getElementById("ui_search_load_more")
+              .dispatchEvent(clickEvent);
+          } catch (e) {
+            console.log(e);
+          }
+          const a = document.querySelectorAll(
+            'button.search_sub_button[style="display: none;"]'
+          );
+          a[a.length - 1].scrollIntoView();
+          await sleep(getRndInteger(1 * 1000, 2 * 1000));
+          return await clickUsers();
+        }
+        if (!checkVisible(users[0], 50, "visible")) {
+          users[0].scrollIntoView();
+        }
+        users[0].dispatchEvent(clickEvent);
+        helperRef.current += 1;
+        setDone(helperRef.current);
       }
-      users[0]
-        .querySelector("a.friends_find_user_add")
-        .dispatchEvent(clickEvent);
-      helperRef.current += 1;
-      setDone(helperRef.current);
+      return "ok";
     }
   };
-
   const clicking = async () => {
-    const timeout = [];
     let set_error = false;
     for (const item of Object.keys(data)) {
       if (isNaN(Number(data[item])) || data[item] === " ") {
@@ -129,7 +140,7 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
       }
     }
     if (
-      window.location.href !== "https://vk.com/friends?act=find" &&
+      !window.location.href.includes("https://vk.com/friends?act=find") &&
       !set_error
     ) {
       setError("Перейдите по данной ссылке");
@@ -139,33 +150,37 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
       setIsStarted(false);
       localStorage.setItem("isStarted", "0");
     } else if (!set_error) {
+      let stope = false;
       for (let i = 1; i !== Number(data.countClick) + 1; i++) {
-        if (i !== Number(data.countClick)) {
-          // await sleep(1000).then(() => {
-          //   console.log("ok"  );
-          // });
-          timeout.push(
-            setTimeout(
-              clickUsers,
-              getRndInteger(
-                Number(data.startDelay) * 1000 * i,
-                Number(data.stopDelay) * 1000 * i
-              )
-            )
-          );
-        } else {
-          console.log(i);
-          timeout.push(
-            setTimeout(() => {
-              clickUsers();
-              removeAllTimeouts();
-              setIsStarted(false);
-              localStorage.setItem("isStarted", "0");
-            }, getRndInteger(Number(data.startDelay) * 1000 * i * 1.5, Number(data.stopDelay) * 1000 * i * 1.5))
-          );
+        if (stope) {
+          setIsStarted(false);
+          localStorage.setItem("isStarted", "0");
+          break;
         }
+        await sleep(
+          getRndInteger(
+            Number(data.startDelay) * 1000,
+            Number(data.stopDelay) * 1000
+          )
+        ).then(async () => {
+          const click_result = await clickUsers();
+          if (click_result === "stoped") {
+            stope = true;
+          } else if (click_result === "time_limit") {
+            console.log("Time limit");
+            await sleep(
+              getRndInteger(
+                Number(data.startDayLimit) * 1000,
+                Number(data.stopDayLimit) * 1000
+              )
+            ).then(() => {
+              console.log("continue");
+            });
+          }
+        });
       }
-      localStorage.setItem("timeouts", JSON.stringify(timeout));
+      setIsStarted(false);
+      localStorage.setItem("isStarted", "0");
     }
   };
 
