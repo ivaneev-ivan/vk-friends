@@ -33,7 +33,7 @@ function checkVisible(elm, threshold, mode) {
   return mode === "above" ? above : mode === "below" ? below : !above && !below;
 }
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -45,15 +45,23 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
   const helperRef = useRef(0);
 
   useEffect(() => {
-    const sidebar_data_sleep = localStorage.getItem("sidebar_data_sleep");
+    const sidebar_data_sleep = localStorage.getItem("sidebar_vk_data_sleep");
     if (sidebar_data_sleep !== null) {
       setData(JSON.parse(sidebar_data_sleep));
+    } else {
+      setData({
+        startDelay: "3",
+        stopDelay: "8",
+        startDayLimit: "8500",
+        stopDayLimit: "8700",
+        countClick: "100",
+      });
     }
     localStorage.setItem("done_users", String(1));
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("sidebar_data_sleep", JSON.stringify(data));
+    localStorage.setItem("sidebar_vk_data_sleep", JSON.stringify(data));
   }, [data]);
 
   const removeAllTimeouts = () => {
@@ -129,7 +137,11 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
   const clicking = async () => {
     let set_error = false;
     for (const item of Object.keys(data)) {
-      if (isNaN(Number(data[item])) || data[item] === " ") {
+      if (
+        isNaN(Number(data[item])) ||
+        data[item] === " " ||
+        data[item] === ""
+      ) {
         setError("Вводите только целые цифры");
         set_error = true;
         setTimeout(() => {
@@ -157,27 +169,24 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
           localStorage.setItem("isStarted", "0");
           break;
         }
+        const click_result = await clickUsers();
+        if (click_result === "stoped") {
+          stope = true;
+        } else if (click_result === "time_limit") {
+          console.log("Time limit");
+          await sleep(
+            getRndInteger(
+              Number(data.startDayLimit) * 1000,
+              Number(data.stopDayLimit) * 1000
+            )
+          );
+        }
         await sleep(
           getRndInteger(
             Number(data.startDelay) * 1000,
             Number(data.stopDelay) * 1000
           )
-        ).then(async () => {
-          const click_result = await clickUsers();
-          if (click_result === "stoped") {
-            stope = true;
-          } else if (click_result === "time_limit") {
-            console.log("Time limit");
-            await sleep(
-              getRndInteger(
-                Number(data.startDayLimit) * 1000,
-                Number(data.stopDayLimit) * 1000
-              )
-            ).then(() => {
-              console.log("continue");
-            });
-          }
-        });
+        );
       }
       setIsStarted(false);
       localStorage.setItem("isStarted", "0");
@@ -311,6 +320,7 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
           <button
             className="FlatButton FlatButton--primary FlatButton--size-m"
             onClick={startClick}
+            style={{ backgroundColor: isStarted ? "red" : "" }}
           >
             {isStarted ? "Стоп" : "Начать"}
           </button>

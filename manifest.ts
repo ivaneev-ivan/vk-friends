@@ -31,7 +31,7 @@ const manifest: chrome.runtime.ManifestV3 = {
       matches: ["https://vk.com/*"],
     },
   ],
-  permissions: ["storage"],
+  permissions: [],
 };
 
 export default manifest;
