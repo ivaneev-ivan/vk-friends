@@ -142,7 +142,11 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
         data[item] === " " ||
         data[item] === ""
       ) {
-        setError("Вводите только целые цифры");
+        if (isNaN(Number(data[item]))) {
+          setError("Вводите только целые цифры");
+        } else {
+          setError("Заполните все поля");
+        }
         set_error = true;
         setTimeout(() => {
           setError(null);
@@ -327,7 +331,7 @@ const SideBar: FC<{ show: boolean }> = ({ show }) => {
         </div>
         {error && (
           <h3 style={{ color: "red", textAlign: "center" }}>
-            {error === "Вводите только целые цифры" ? (
+            {error !== "Перейдите по данной ссылке" ? (
               error
             ) : (
               <>
